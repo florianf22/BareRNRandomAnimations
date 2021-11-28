@@ -1,16 +1,46 @@
 import * as React from 'react';
-import {Text, View, StyleSheet} from 'react-native';
+import {View, StyleSheet, ScrollView} from 'react-native';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
+//
+import Movie from './components/Movie';
+import {width} from './constants';
+import data from './data';
+import {useSharedValue} from 'react-native-reanimated';
+import Backdrop from './components/Backdrop';
+
+const ITEM_WIDTH = width * 0.8;
+const dataEdited = [null, ...data, null];
 
 interface AppProps {}
 
 const App: React.FC<AppProps> = () => {
+  const scrollX = useSharedValue(0);
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>
-        The first app with bare react native project that also runs on android
-        emulator
-      </Text>
-    </View>
+    <GestureHandlerRootView style={{flex: 1}}>
+      <View style={styles.container}>
+        <Backdrop scrollX={scrollX} />
+        <ScrollView
+          style={styles.scrollView}
+          horizontal
+          pagingEnabled={true}
+          decelerationRate="fast"
+          bounces={false}
+          scrollEventThrottle={16}
+          snapToInterval={ITEM_WIDTH}
+          onScroll={({nativeEvent}) => {
+            scrollX.value = nativeEvent.contentOffset.x;
+          }}>
+          {dataEdited.map((movie, i) => {
+            if (!movie) {
+              return <View key={i} style={{width: ITEM_WIDTH / 8}} />;
+            }
+
+            return <Movie key={i} movie={movie} scrollX={scrollX} index={i} />;
+          })}
+        </ScrollView>
+      </View>
+    </GestureHandlerRootView>
   );
 };
 
@@ -21,7 +51,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  text: {},
+  scrollView: {},
 });
 
 export default App;
