@@ -1,18 +1,17 @@
 import * as React from 'react';
-import {Text, View, StyleSheet} from 'react-native';
+import {StyleSheet} from 'react-native';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import {NavigationContainer} from '@react-navigation/native';
+import StackNavigator from './navigators/StackNavigator';
 
 interface AppProps {}
 
 const App: React.FC<AppProps> = () => {
   return (
-    <GestureHandlerRootView style={{flex: 1}}>
-      <View style={styles.container}>
-        <Text style={styles.text}>
-          The first app with bare react native project that also runs on android
-          emulator
-        </Text>
-      </View>
+    <GestureHandlerRootView style={styles.container}>
+      <NavigationContainer>
+        <StackNavigator />
+      </NavigationContainer>
     </GestureHandlerRootView>
   );
 };
@@ -20,11 +19,7 @@ const App: React.FC<AppProps> = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
-  text: {},
 });
 
 export default App;
